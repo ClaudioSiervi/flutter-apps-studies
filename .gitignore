@@ -1,19 +1,19 @@
 # Miscellaneous
 *.class
 *.log
-*.pyc
+contador_de_pessoas/*.pyc
 *.swp
-.DS_Store
+contador_de_pessoas/.DS_Store
 .atom/
-.buildlog/
-.history
-.svn/
+contador_de_pessoas/.buildlog/
+contador_de_pessoas/.history
+contador_de_pessoas/.svn/
 
 # IntelliJ related
 *.iml
 *.ipr
 *.iws
-.idea/
+contador_de_pessoas/.idea/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -23,13 +23,13 @@
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
-.pub-cache/
-.pub/
-/build/
+contador_de_pessoas/.dart_tool/
+contador_de_pessoas/.flutter-plugins
+contador_de_pessoas/.flutter-plugins-dependencies
+contador_de_pessoas/.packages
+contador_de_pessoas/.pub-cache/
+contador_de_pessoas/.pub/
+contador_de_pessoas/build/
 
 # Web related
 lib/generated_plugin_registrant.dart
