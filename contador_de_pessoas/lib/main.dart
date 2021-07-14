@@ -3,7 +3,40 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(MaterialApp(
     title: "Contador de pessoas",
-    home: Stack(
+    home: Home(),
+  ));
+}
+
+
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  int _people =0;
+  String _infoText = "";
+
+  void _changePeople(int delta){
+    setState(() {
+      _people += delta;
+
+      if (_people<0){
+        _infoText = "Mundo invertido?";
+      } else if(_people<=10){
+        _infoText = "Pode entrar!";
+      } else {
+        _infoText = "Lotado!";
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
       children: <Widget>[
         Image.asset(
           "images/restaurant.jpg",
@@ -14,9 +47,9 @@ void main() {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Pessoas: 0",
+              "Pessoas: $_people",
               style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -24,9 +57,11 @@ void main() {
                 Padding(
                   padding: EdgeInsets.all(40.0),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _changePeople(-1);
+                    },
                     child: Text(
-                      "+1",
+                      "-1",
                       style: TextStyle(color: Colors.white, fontSize: 40.0),
                     ),
                   ),
@@ -34,9 +69,11 @@ void main() {
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _changePeople(1);
+                    },
                     child: Text(
-                      "-1",
+                      "+1",
                       style: TextStyle(color: Colors.white, fontSize: 40.0),
                     ),
                   ),
@@ -44,13 +81,13 @@ void main() {
               ],
             ),
             Text(
-              "Pode entrar!",
+              "$_infoText",
               style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w100),
+              TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 30.0),
             ),
           ],
         )
       ],
-    ),
-  ));
+    );
+  }
 }
