@@ -3,12 +3,27 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert' as convert;
 
-var request = Uri.parse(
-    'https://api.hgbrasil.com/finance/stock_price?key=31a7aff7&symbol=bidi4');
-// const request = "http";
+var request = Uri.parse('https://api.hgbrasil.com/finance/');
 
 void main() async {
-  runApp(MaterialApp(home: Home()));
+  runApp(MaterialApp(
+    home: Home(),
+    theme: ThemeData(
+        highlightColor: Colors.amber,
+        primaryColor: Colors.white,
+        inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+              color: Colors.white,
+            )),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+              color: Colors.amber,
+            )),
+            hintStyle: TextStyle(
+              color: Colors.amber,
+            ))),
+  ));
 }
 
 Future<Map> getData() async {
@@ -29,13 +44,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  double? dolar;
+  double? euro;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.black12,
       appBar: AppBar(
         title: Text("\$ Conversor \$"),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.amber,
         centerTitle: true,
       ),
       body: FutureBuilder<Map>(
@@ -47,7 +65,7 @@ class _HomeState extends State<Home> {
               return Center(
                   child: Text(
                 "Carregando dados ...",
-                style: TextStyle(color: Colors.green, fontSize: 25.0),
+                style: TextStyle(color: Colors.amber, fontSize: 25.0),
                 textAlign: TextAlign.center,
               ));
             default:
@@ -59,10 +77,45 @@ class _HomeState extends State<Home> {
                   textAlign: TextAlign.center,
                 ));
               } else {
-                return Container(
-                  color: Colors.amber,
-                  child: Text("Aeee!!! Deu certo !!",
-                  style: TextStyle(color: Colors.purple, fontSize: 44.0),),
+                dolar = snapshot.data!["results"]["currencies"]["USD"]["buy"];
+                euro = snapshot.data!["results"]["currencies"]["EUR"]["buy"];
+                print(dolar.toString());
+                return SingleChildScrollView(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Icon(
+                        Icons.monetization_on,
+                        size: 150.0,
+                        color: Colors.amber,
+                      ),
+                      Divider(),
+                      TextField(
+                        decoration: InputDecoration(
+                            labelText: "Reais",
+                            labelStyle: TextStyle(color: Colors.amber),
+                            border: OutlineInputBorder(),
+                            prefixText: "R\$"),
+                      ),
+                      Divider(),
+                      TextField(
+                        decoration: InputDecoration(
+                            labelText: "Dolares",
+                            labelStyle: TextStyle(color: Colors.amber),
+                            border: OutlineInputBorder(),
+                            prefixText: "US\$"),
+                      ),
+                      Divider(),
+                      TextField(
+                        decoration: InputDecoration(
+                            labelText: "Euros",
+                            labelStyle: TextStyle(color: Colors.amber),
+                            border: OutlineInputBorder(),
+                            prefixText: "EU"),
+                      ),
+                    ],
+                  ),
                 );
               }
           }
