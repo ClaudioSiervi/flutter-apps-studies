@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -44,8 +46,24 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final realController = TextEditingController();
+  final dolarController = TextEditingController();
+  final euroController = TextEditingController();
+
   double? dolar;
   double? euro;
+
+  void _realChanged(String text) {
+    print(text);
+  }
+
+  void _dolarChanged(String text) {
+    print(text);
+  }
+
+  void _euroChanged(String text) {
+    print(text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,29 +109,14 @@ class _HomeState extends State<Home> {
                         color: Colors.amber,
                       ),
                       Divider(),
-                      TextField(
-                        decoration: InputDecoration(
-                            labelText: "Reais",
-                            labelStyle: TextStyle(color: Colors.amber),
-                            border: OutlineInputBorder(),
-                            prefixText: "R\$"),
-                      ),
+                      buildTextField(
+                          "Reais", "R\$", realController, _realChanged),
                       Divider(),
-                      TextField(
-                        decoration: InputDecoration(
-                            labelText: "Dolares",
-                            labelStyle: TextStyle(color: Colors.amber),
-                            border: OutlineInputBorder(),
-                            prefixText: "US\$"),
-                      ),
+                      buildTextField(
+                          "Dolares", "US\$", dolarController, _dolarChanged),
                       Divider(),
-                      TextField(
-                        decoration: InputDecoration(
-                            labelText: "Euros",
-                            labelStyle: TextStyle(color: Colors.amber),
-                            border: OutlineInputBorder(),
-                            prefixText: "EU"),
-                      ),
+                      buildTextField(
+                          "Euros", "EU", euroController, _euroChanged),
                     ],
                   ),
                 );
@@ -123,4 +126,22 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+Widget buildTextField(String labelText, String prefixText,
+    TextEditingController c, Function(String) f) {
+  return TextField(
+    controller: c,
+    decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: TextStyle(color: Colors.amber),
+        border: OutlineInputBorder(),
+        prefixText: prefixText),
+    style: TextStyle(
+      color: Colors.amber,
+      fontSize: 25.0,
+    ),
+    onChanged: f,
+    keyboardType: TextInputType.number,
+  );
 }
