@@ -50,19 +50,27 @@ class _HomeState extends State<Home> {
   final dolarController = TextEditingController();
   final euroController = TextEditingController();
 
-  double? dolar;
-  double? euro;
+  double dolarExchange = 0.0;
+  double euroExchange = 0.0;
 
   void _realChanged(String text) {
-    print(text);
+    double real = double.parse(text);
+    dolarController.text = (real / this.dolarExchange).toStringAsFixed(2);
+    euroController.text = (real / this.euroExchange).toStringAsFixed(2);
   }
 
   void _dolarChanged(String text) {
-    print(text);
+    double dolar = double.parse(text);
+    realController.text = (dolar * this.dolarExchange).toStringAsFixed(2);
+    euroController.text =
+        (dolar * this.dolarExchange / euroExchange).toStringAsFixed(2);
   }
 
   void _euroChanged(String text) {
-    print(text);
+    double euro = double.parse(text);
+    realController.text = (euro * this.euroExchange).toStringAsFixed(2);
+    dolarController.text =
+        (euro * this.euroExchange / this.dolarExchange).toStringAsFixed(2);
   }
 
   @override
@@ -95,9 +103,11 @@ class _HomeState extends State<Home> {
                   textAlign: TextAlign.center,
                 ));
               } else {
-                dolar = snapshot.data!["results"]["currencies"]["USD"]["buy"];
-                euro = snapshot.data!["results"]["currencies"]["EUR"]["buy"];
-                print(dolar.toString());
+                dolarExchange =
+                    snapshot.data!["results"]["currencies"]["USD"]["buy"];
+                euroExchange =
+                    snapshot.data!["results"]["currencies"]["EUR"]["buy"];
+
                 return SingleChildScrollView(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
