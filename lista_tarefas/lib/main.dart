@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _toDoController = TextEditingController();
 
-  late List _toDoList;
+  List _toDoList = [];
   late Map<String, dynamic> _lastRemoved;
   late int _lastRemovedPosition;
 
@@ -44,6 +44,24 @@ class _HomeState extends State<Home> {
 
       _saveData();
     });
+  }
+
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(seconds: 1));
+
+    setState(() {
+      _toDoList.sort((a, b) {
+        if (a["ok"] && !b["ok"])
+          return 1;
+        else if (!a["ok"] && b["ok"])
+          return -1;
+        else
+          return 0;
+      });
+      _saveData();
+    });
+
+    return null;
   }
 
   @override
@@ -75,11 +93,13 @@ class _HomeState extends State<Home> {
             ),
           ),
           Expanded(
+              child: RefreshIndicator(
             child: ListView.builder(
                 padding: EdgeInsets.only(top: 10.0),
                 itemCount: _toDoList.length,
                 itemBuilder: buildItem),
-          )
+            onRefresh: _refresh,
+          ))
         ],
       ),
     );
@@ -105,7 +125,9 @@ class _HomeState extends State<Home> {
         title: Text(_toDoList[index]["title"]),
         value: _toDoList[index]["ok"],
         secondary: CircleAvatar(
-          child: Icon(_toDoList[index]["ok"] ? Icons.check : Icons.error),
+          child: Icon(
+            _toDoList[index]["ok"] ? Icons.check : Icons.error,
+          ),
         ),
         onChanged: (bool? value) {
           setState(() {
@@ -121,16 +143,18 @@ class _HomeState extends State<Home> {
           _toDoList.removeAt(index);
 
           _saveData();
-          
-          final snack = SnackBar(content: Text("Tarefa \"${_lastRemoved["title"]} \""),
-          action: SnackBarAction(label: "Desfazer",
-          onPressed: (){
-            setState(() {
-              _toDoList.insert(_lastRemovedPosition, _lastRemoved);
-              _saveData();
-            });
-          }),
-          duration: Duration(seconds: 2),
+
+          final snack = SnackBar(
+            content: Text("Tarefa \"${_lastRemoved["title"]} \""),
+            action: SnackBarAction(
+                label: "Desfazer",
+                onPressed: () {
+                  setState(() {
+                    _toDoList.insert(_lastRemovedPosition, _lastRemoved);
+                    _saveData();
+                  });
+                }),
+            duration: Duration(seconds: 2),
           );
 
           Scaffold.of(context).showSnackBar(snack);
