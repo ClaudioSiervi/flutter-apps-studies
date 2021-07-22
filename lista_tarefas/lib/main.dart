@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Expanded(
                     child: TextField(
-                      controller: _toDoController,
+                  controller: _toDoController,
                   decoration: InputDecoration(
                       labelText: "Nova tarefa",
                       labelStyle: TextStyle(color: Colors.blueAccent)),
@@ -60,20 +60,24 @@ class _HomeState extends State<Home> {
             ),
           ),
           Expanded(
-              child: ListView.builder(
-                  padding: EdgeInsets.only(top: 10.0),
-                  itemCount: _toDoList.length,
-                  itemBuilder: (context, index){
-                    return CheckboxListTile(
-                      title: Text(_toDoList[index]["title"]),
-                      onChanged: (bool? value) {},
-                      value: _toDoList[index]["ok"],
-                      secondary: CircleAvatar(
-                        child: Icon(
-                            _toDoList[index]["ok"] ? Icons.check : Icons.error),
-                      ),
-                    );
-                  }),
+            child: ListView.builder(
+                padding: EdgeInsets.only(top: 10.0),
+                itemCount: _toDoList.length,
+                itemBuilder: (context, index) {
+                  return CheckboxListTile(
+                    title: Text(_toDoList[index]["title"]),
+                    value: _toDoList[index]["ok"],
+                    secondary: CircleAvatar(
+                      child: Icon(
+                          _toDoList[index]["ok"] ? Icons.check : Icons.error),
+                    ),
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _toDoList[index]["ok"] = value;
+                      });
+                    },
+                  );
+                }),
           )
         ],
       ),
