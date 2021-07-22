@@ -17,7 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List _toDoList = [];
+  List _toDoList = ["Banana", "Uva", "Kiwi", "Pokan"];
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,15 @@ class _HomeState extends State<Home> {
                 ElevatedButton(child: Text("ADD"), onPressed: () {})
               ],
             ),
-          )
+          ),
+          Expanded(child: ListView.builder(
+              padding: EdgeInsets.only(top: 10.0),
+              itemCount: _toDoList.length,
+              itemBuilder: (context, index){
+                return ListTile(
+                  title: Text(_toDoList[index]),
+                );
+              }))
         ],
       ),
     );
