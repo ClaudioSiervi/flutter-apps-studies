@@ -49,14 +49,18 @@ class _HomeState extends State<Home> {
   final realController = TextEditingController();
   final dolarController = TextEditingController();
   final euroController = TextEditingController();
+  final bitcoinController = TextEditingController();
 
   double dolarExchange = 0.0;
   double euroExchange = 0.0;
+  double bitcoinExchange = 0.0;
+  int totalDecimal = 4;
 
   void _clearAll() {
     realController.text = "";
     dolarController.text = "";
     euroController.text = "";
+    bitcoinController.text = "";
   }
 
   void _realChanged(String text) {
@@ -65,8 +69,10 @@ class _HomeState extends State<Home> {
       return;
     }
     double real = double.parse(text);
-    dolarController.text = (real / this.dolarExchange).toStringAsFixed(2);
-    euroController.text = (real / this.euroExchange).toStringAsFixed(2);
+    dolarController.text = (real / dolarExchange).toStringAsFixed(totalDecimal);
+    euroController.text = (real / euroExchange).toStringAsFixed(totalDecimal);
+    bitcoinController.text =
+        (real / bitcoinExchange).toStringAsFixed(totalDecimal);
   }
 
   void _dolarChanged(String text) {
@@ -75,9 +81,11 @@ class _HomeState extends State<Home> {
       return;
     }
     double dolar = double.parse(text);
-    realController.text = (dolar * this.dolarExchange).toStringAsFixed(2);
+    realController.text = (dolar * dolarExchange).toStringAsFixed(totalDecimal);
     euroController.text =
-        (dolar * this.dolarExchange / euroExchange).toStringAsFixed(2);
+        (dolar * dolarExchange / euroExchange).toStringAsFixed(totalDecimal);
+    bitcoinController.text =
+        (dolar * dolarExchange / bitcoinExchange).toStringAsFixed(totalDecimal);
   }
 
   void _euroChanged(String text) {
@@ -86,9 +94,25 @@ class _HomeState extends State<Home> {
       return;
     }
     double euro = double.parse(text);
-    realController.text = (euro * this.euroExchange).toStringAsFixed(2);
+    realController.text = (euro * euroExchange).toStringAsFixed(totalDecimal);
     dolarController.text =
-        (euro * this.euroExchange / this.dolarExchange).toStringAsFixed(2);
+        (euro * euroExchange / dolarExchange).toStringAsFixed(totalDecimal);
+    bitcoinController.text =
+        (euro * euroExchange / bitcoinExchange).toStringAsFixed(totalDecimal);
+  }
+
+  void _bitcoinChanged(String text) {
+    if (text.isEmpty) {
+      _clearAll();
+      return;
+    }
+    double bitcoin = double.parse(text);
+    realController.text =
+        (bitcoin * bitcoinExchange).toStringAsFixed(totalDecimal);
+    dolarController.text = (bitcoin * bitcoinExchange / dolarExchange)
+        .toStringAsFixed(totalDecimal);
+    euroController.text = (bitcoin * bitcoinExchange / euroExchange)
+        .toStringAsFixed(totalDecimal);
   }
 
   @override
@@ -121,11 +145,27 @@ class _HomeState extends State<Home> {
                   textAlign: TextAlign.center,
                 ));
               } else {
-                dolarExchange =
-                    snapshot.data!["results"]["currencies"]["USD"]["buy"];
-                euroExchange =
-                    snapshot.data!["results"]["currencies"]["EUR"]["buy"];
-
+                if (snapshot.data!["results"]["currencies"]["USD"]["buy"] ==
+                    null) {
+                  dolarExchange = 1.0;
+                } else {
+                  dolarExchange =
+                      snapshot.data!["results"]["currencies"]["USD"]["buy"];
+                }
+                if (snapshot.data!["results"]["currencies"]["EUR"]["buy"] ==
+                    null) {
+                  euroExchange = 1.0;
+                } else {
+                  euroExchange =
+                      snapshot.data!["results"]["currencies"]["EUR"]["buy"];
+                }
+                if (snapshot.data!["results"]["currencies"]["BTC"]["buy"] ==
+                    null) {
+                  bitcoinExchange = 1.0;
+                } else {
+                  bitcoinExchange =
+                      snapshot.data!["results"]["currencies"]["BTC"]["buy"];
+                }
                 return SingleChildScrollView(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
@@ -145,6 +185,9 @@ class _HomeState extends State<Home> {
                       Divider(),
                       buildTextField(
                           "Euros", "EU", euroController, _euroChanged),
+                      Divider(),
+                      buildTextField("Bitcoins", "BLT", bitcoinController,
+                          _bitcoinChanged),
                     ],
                   ),
                 );
